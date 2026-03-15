@@ -1,2 +1,0 @@
-# plasmacam
-index.html
