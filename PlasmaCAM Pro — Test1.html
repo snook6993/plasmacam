@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<!-- saved from url=(0056)file:///Users/khinemye/Downloads/plasmacam-pro-full.html -->
+<html lang="my"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlasmaCAM Pro — Full Suite</title>
+<link href="./PlasmaCAM Pro — Test1_files/css2" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0f14;--bg2:#13161e;--bg3:#1a1e28;
+  --border:#252a38;--border2:#2e3447;
+  --plasma:#00b4d8;--hot:#ff6b35;--steel:#8b9dc3;
+  --text:#e8ecf4;--muted:#5a6480;
+  --success:#2dd4a0;--warn:#f0a500;--danger:#e24b4b;
+  --mono:'Share Tech Mono',monospace;--sans:'DM Sans',sans-serif;
+  --r:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+
+/* ── HEADER ── */
+header{background:rgba(13,15,20,.98);border-bottom:1px solid var(--border);padding:0 18px;height:50px;display:flex;align-items:center;gap:12px;flex-shrink:0;z-index:50;}
+.logo{font-family:var(--mono);font-size:15px;color:var(--plasma);letter-spacing:2px;display:flex;align-items:center;gap:8px;}
+.logo-hex{width:24px;height:24px;background:var(--plasma);clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%);flex-shrink:0;}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+
+/* ── TOP TABS ── */
+.top-tabs{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;padding:0 18px;flex-shrink:0;}
+.ttab{padding:12px 18px;cursor:pointer;font-size:12px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;transition:all .18s;display:flex;align-items:center;gap:6px;user-select:none;font-family:var(--mono);letter-spacing:.5px;}
+.ttab:hover{color:var(--text);}
+.ttab.active{color:var(--plasma);border-bottom-color:var(--plasma);}
+.ttab-dot{width:5px;height:5px;border-radius:50%;background:var(--border2);}
+.ttab.active .ttab-dot{background:var(--plasma);}
+
+/* ── PANELS ── */
+.panel{display:none;flex:1;overflow:hidden;}
+.panel.active{display:flex;flex-direction:column;}
+
+/* ══════════════════════════════════════
+   DRAW PANEL
+══════════════════════════════════════ */
+.draw-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
+/* Sub-toolbar (draw mode toggle) */
+.draw-subtool{background:var(--bg3);border-bottom:1px solid var(--border);padding:6px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.mode-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border2);background:transparent;cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.5px;color:var(--muted);transition:all .15s;}
+.mode-btn.active{background:rgba(0,180,216,.12);border-color:var(--plasma);color:var(--plasma);}
+.mode-sep{flex:1;}
+
+/* ── TOOLBAR (drawing tools) ── */
+.toolbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:5px 14px;display:flex;align-items:center;gap:3px;flex-wrap:wrap;flex-shrink:0;}
+.tg{display:flex;gap:2px;padding-right:8px;border-right:1px solid var(--border);margin-right:3px;}
+.tg:last-child{border:none;padding-right:0;}
+.tbtn{padding:5px 8px;background:transparent;border:1px solid transparent;border-radius:5px;cursor:pointer;color:var(--muted);font-family:var(--mono);font-size:10px;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:44px;transition:all .13s;user-select:none;}
+.tbtn:hover{border-color:var(--border2);color:var(--text);}
+.tbtn.active{background:rgba(0,180,216,.1);border-color:var(--plasma);color:var(--plasma);}
+.tbtn svg{width:16px;height:16px;}
+.tbl{font-size:8px;letter-spacing:.3px;}
+
+/* Draw body layout */
+.draw-body{flex:1;display:grid;grid-template-columns:210px 1fr 190px;overflow:hidden;}
+
+/* ── LEFT PROPS ── */
+.lp{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;}
+.ps{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px;}
+.pst{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);margin-bottom:7px;text-transform:uppercase;}
+label{display:block;font-size:10px;color:var(--muted);margin-bottom:3px;font-family:var(--mono);}
+input[type=number],input[type=text],select{width:100%;padding:5px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--mono);font-size:11px;outline:none;transition:border-color .15s;}
+input:focus,select:focus{border-color:var(--plasma);}
+.pr{display:flex;gap:5px;margin-bottom:5px;}
+.pr>div{flex:1;}
+.cr{display:flex;gap:5px;align-items:center;margin-bottom:6px;flex-wrap:wrap;}
+.cs{width:24px;height:24px;border-radius:3px;border:1px solid var(--border2);cursor:pointer;flex-shrink:0;transition:border-color .15s;}
+.cs.active{border-color:var(--plasma);box-shadow:0 0 0 2px rgba(0,180,216,.25);}
+
+/* ── CANVAS ── */
+.ca{position:relative;overflow:hidden;background:var(--bg);}
+canvas{position:absolute;top:0;left:0;}
+#gc{pointer-events:none;}
+#mc{cursor:crosshair;}
+.ci{position:absolute;bottom:8px;left:8px;font-family:var(--mono);font-size:9px;color:var(--muted);background:rgba(13,15,20,.85);padding:3px 8px;border-radius:3px;pointer-events:none;display:flex;gap:10px;}
+.hb{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:9px;color:var(--warn);background:rgba(13,15,20,.92);border:1px solid rgba(240,165,0,.3);padding:4px 12px;border-radius:16px;pointer-events:none;white-space:nowrap;}
+.zc{position:absolute;bottom:36px;right:10px;display:flex;flex-direction:column;gap:2px;}
+.zb{width:26px;height:26px;background:var(--bg2);border:1px solid var(--border2);border-radius:4px;cursor:pointer;color:var(--text);font-size:14px;display:flex;align-items:center;justify-content:center;}
+.zb:hover{border-color:var(--plasma);color:var(--plasma);}
+
+/* ── RIGHT PANEL ── */
+.rp{background:var(--bg2);border-left:1px solid var(--border);overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;}
+.sl{display:flex;flex-direction:column;gap:3px;max-height:180px;overflow-y:auto;}
+.si{padding:5px 7px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:10px;font-family:var(--mono);transition:border-color .13s;}
+.si:hover{border-color:var(--border2);}
+.si.sel{border-color:var(--plasma);color:var(--plasma);}
+.sd{color:var(--danger);cursor:pointer;padding:0 3px;font-size:13px;}
+.dt{width:100%;font-family:var(--mono);font-size:10px;}
+.dt td{padding:3px 3px;border-bottom:1px solid var(--border);}
+.dt tr:last-child td{border:none;}
+.dk{color:var(--muted);}
+.dv{color:var(--plasma);text-align:right;}
+
+/* ── AI UPLOAD MODE ── */
+.ai-body{flex:1;display:grid;grid-template-columns:300px 1fr;overflow:hidden;}
+.ai-left{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.upload-zone{border:2px dashed var(--border2);border-radius:10px;padding:20px 14px;text-align:center;cursor:pointer;transition:all .2s;position:relative;background:var(--bg3);}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--plasma);background:rgba(0,180,216,.05);}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.prev-wrap{position:relative;display:none;}
+.prev-wrap img{width:100%;border-radius:6px;border:1px solid var(--border);display:block;}
+.prev-badge{position:absolute;top:5px;right:5px;background:rgba(13,15,20,.9);border:1px solid var(--plasma);color:var(--plasma);font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:3px;}
+.prog-bar{width:100%;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--plasma);border-radius:2px;transition:width .4s ease;width:0%;}
+.ai-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--plasma),#0090b8);color:#000;border:none;border-radius:7px;font-family:var(--mono);font-size:12px;letter-spacing:1px;cursor:pointer;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;}
+.ai-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 5px 18px rgba(0,180,216,.3);}
+.ai-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+.sb{padding:10px;border-radius:6px;font-family:var(--mono);font-size:10px;line-height:1.7;display:none;}
+.sb.loading{background:rgba(240,165,0,.07);border:1px solid rgba(240,165,0,.2);color:var(--warn);}
+.sb.success{background:rgba(45,212,160,.07);border:1px solid rgba(45,212,160,.2);color:var(--success);}
+.sb.error{background:rgba(226,75,75,.07);border:1px solid rgba(226,75,75,.2);color:var(--danger);}
+.spin{display:inline-block;width:9px;height:9px;border:1.5px solid transparent;border-top-color:currentColor;border-radius:50%;animation:sp .8s linear infinite;margin-right:5px;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.chip-wrap{display:flex;flex-wrap:wrap;gap:5px;}
+.chip{padding:3px 9px;background:var(--bg3);border:1px solid var(--border2);border-radius:16px;font-family:var(--mono);font-size:9px;color:var(--steel);}
+.chip.on{border-color:var(--plasma);color:var(--plasma);background:rgba(0,180,216,.08);}
+.ai-desc{font-size:11px;color:var(--muted);line-height:1.6;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:8px;max-height:120px;overflow-y:auto;}
+
+/* ══════════════════════════════════════
+   COST PANEL
+══════════════════════════════════════ */
+.cost-body{flex:1;overflow-y:auto;padding:20px;display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;}
+.cost-res{background:linear-gradient(135deg,rgba(0,180,216,.08),rgba(0,180,216,.02));border:1px solid rgba(0,180,216,.2);border-radius:var(--r);padding:20px;}
+.cost-total{font-family:var(--mono);font-size:28px;color:var(--plasma);margin:6px 0;}
+.bdr{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.bdr:last-child{border:none;font-weight:600;color:var(--plasma);}
+
+/* ══════════════════════════════════════
+   ORDERS PANEL
+══════════════════════════════════════ */
+.orders-body{flex:1;overflow-y:auto;padding:18px;}
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;}
+.sl2{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;}
+.sv{font-family:var(--mono);font-size:20px;color:var(--text);}
+.sv.p{color:var(--plasma);}.sv.h{color:var(--hot);}.sv.g{color:var(--success);}
+.otw{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;padding:10px 14px;font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);background:var(--bg3);border-bottom:1px solid var(--border);}
+td{padding:11px 14px;border-bottom:1px solid var(--border);font-size:12px;vertical-align:middle;}
+tr:last-child td{border:none;}
+tr:hover td{background:rgba(255,255,255,.015);}
+.badge{display:inline-block;padding:2px 8px;border-radius:16px;font-family:var(--mono);font-size:9px;letter-spacing:.3px;font-weight:600;}
+.bp{background:rgba(240,165,0,.12);color:var(--warn);border:1px solid rgba(240,165,0,.2);}
+.bc{background:rgba(255,107,53,.12);color:var(--hot);border:1px solid rgba(255,107,53,.2);}
+.bd{background:rgba(45,212,160,.12);color:var(--success);border:1px solid rgba(45,212,160,.2);}
+.bx{background:rgba(226,75,75,.12);color:var(--danger);border:1px solid rgba(226,75,75,.2);}
+
+/* MODAL */
+.moverlay{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;}
+.moverlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:24px;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;animation:mup .18s ease;}
+@keyframes mup{from{transform:translateY(16px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+.mt{font-family:var(--mono);font-size:13px;color:var(--plasma);letter-spacing:1px;}
+.mc-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:3px 6px;border-radius:3px;}
+.mc-btn:hover{color:var(--text);background:var(--bg3);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.fg{margin-bottom:10px;}
+.ma{display:flex;gap:7px;justify-content:flex-end;margin-top:16px;}
+
+/* SHARED */
+.btn{padding:7px 14px;border-radius:5px;border:none;cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.5px;transition:all .15s;display:inline-flex;align-items:center;gap:5px;}
+.btn-p{background:var(--plasma);color:#000;} .btn-p:hover{background:#00caee;}
+.btn-g{background:transparent;color:var(--steel);border:1px solid var(--border2);} .btn-g:hover{border-color:var(--plasma);color:var(--plasma);}
+.btn-h{background:var(--hot);color:#fff;} .btn-h:hover{background:#ff855a;}
+.btn-d{background:transparent;color:var(--danger);border:1px solid rgba(226,75,75,.3);} .btn-d:hover{background:rgba(226,75,75,.08);}
+.btn-s{background:var(--success);color:#000;}
+.btn-full{width:100%;justify-content:center;}
+.btn-sm{padding:4px 9px;font-size:9px;}
+.sl3{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(50px);background:var(--bg2);border:1px solid var(--plasma);border-radius:6px;padding:9px 16px;font-family:var(--mono);font-size:10px;color:var(--plasma);z-index:999;transition:transform .22s ease;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+/* grid bg */
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,180,216,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,216,.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+.panel,.top-tabs,header{position:relative;z-index:1;}
+
+@media(max-width:900px){
+  .draw-body{grid-template-columns:1fr;}
+  .lp,.rp{display:none;}
+  .cost-body{grid-template-columns:1fr;}
+  .stats-bar{grid-template-columns:1fr 1fr;}
+  .ai-body{grid-template-columns:1fr;}
+  .ai-left{max-height:45vh;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-hex"></div>
+    PLASMACAM PRO
+  </div>
+  <span style="font-family:var(--mono);font-size:9px;color:var(--muted);background:rgba(0,180,216,.08);border:1px solid rgba(0,180,216,.15);padding:2px 8px;border-radius:10px;">FULL SUITE v2.0</span>
+  <div class="hdr-right">
+    <button class="btn btn-g btn-sm" onclick="A.undo()">↩ Undo</button>
+    <button class="btn btn-g btn-sm" onclick="A.clearAll()">✕ Clear</button>
+    <button class="btn btn-h btn-sm" onclick="A.exportDXF()">⬇ DXF</button>
+  </div>
+</header>
+
+<!-- TOP TABS -->
+<div class="top-tabs">
+  <div class="ttab" onclick="switchMainTab(&#39;draw&#39;)"><div class="ttab-dot"></div>ပုံဆွဲ / AI Upload</div>
+  <div class="ttab active" onclick="switchMainTab(&#39;cost&#39;)"><div class="ttab-dot"></div>ကုန်ကျစရိတ်</div>
+  <div class="ttab" onclick="switchMainTab(&#39;orders&#39;)"><div class="ttab-dot"></div>မှာယူမှတ်တမ်း</div>
+</div>
+
+<!-- ═══════════ DRAW PANEL ═══════════ -->
+<div class="panel" id="panel-draw">
+  <div class="draw-panel">
+
+    <!-- Sub mode toggle -->
+    <div class="draw-subtool">
+      <button class="mode-btn active" id="mode-manual" onclick="setDrawMode(&#39;manual&#39;)">✏ Manual Draw</button>
+      <button class="mode-btn" id="mode-ai" onclick="setDrawMode(&#39;ai&#39;)">🤖 AI Sketch Upload</button>
+      <div class="mode-sep"></div>
+      <span id="modeHint" style="font-family:var(--mono);font-size:9px;color:var(--muted)">Shapes: 0</span>
+    </div>
+
+    <!-- MANUAL DRAW MODE -->
+    <div id="manual-mode" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="tg">
+          <button class="tbtn active" id="tool-select" onclick="A.setTool(&#39;select&#39;)" title="Select (S)">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2l9 6-5 1L4 14z"></path></svg><span class="tbl">SEL</span>
+          </button>
+        </div>
+        <div class="tg">
+          <button class="tbtn" id="tool-line" onclick="A.setTool(&#39;line&#39;)" title="Line (L)">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="2" y1="14" x2="14" y2="2"></line></svg><span class="tbl">LINE</span>
+          </button>
+          <button class="tbtn" id="tool-polyline" onclick="A.setTool(&#39;polyline&#39;)" title="Polyline (P)">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,13 5,5 9,9 13,3"></polyline></svg><span class="tbl">POLY</span>
+          </button>
+          <button class="tbtn" id="tool-freehand" onclick="A.setTool(&#39;freehand&#39;)" title="Freehand (F)">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12 Q5 3 9 7 Q12 11 14 5"></path></svg><span class="tbl">FREE</span>
+          </button>
+        </div>
+        <div class="tg">
+          <button class="tbtn" id="tool-rect" onclick="A.setTool(&#39;rect&#39;)" title="Rectangle (R)">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="8" rx="1"></rect></svg><span class="tbl">RECT</span>
+          </button>
+          <button class="tbtn" id="tool-circle" onclick="A.setTool(&#39;circle&#39;)" title="Circle (C)">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5"></circle></svg><span class="tbl">CIR</span>
+          </button>
+          <button class="tbtn" id="tool-ellipse" onclick="A.setTool(&#39;ellipse&#39;)" title="Ellipse (E)">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="8" cy="8" rx="6" ry="3.5"></ellipse></svg><span class="tbl">ELPS</span>
+          </button>
+          <button class="tbtn" id="tool-arc" onclick="A.setTool(&#39;arc&#39;)" title="Arc (A)">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 13 A7 7 0 0 1 13 3"></path></svg><span class="tbl">ARC</span>
+          </button>
+        </div>
+        <div class="tg">
+          <button class="tbtn" id="tool-text" onclick="A.setTool(&#39;text&#39;)" title="Text (T)">
+            <svg viewBox="0 0 16 16" fill="currentColor"><text x="3" y="13" font-size="12" font-family="monospace">T</text></svg><span class="tbl">TEXT</span>
+          </button>
+          <button class="tbtn" id="tool-dim" onclick="A.setTool(&#39;dim&#39;)" title="Dimension (D)">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="2" y1="12" x2="14" y2="12"></line><line x1="2" y1="10" x2="2" y2="14"></line><line x1="14" y1="10" x2="14" y2="14"></line></svg><span class="tbl">DIM</span>
+          </button>
+        </div>
+        <div class="tg">
+          <button class="tbtn" id="tool-erase" onclick="A.setTool(&#39;erase&#39;)" title="Erase (X)">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12 L10 3 L14 8 L7 12Z"></path></svg><span class="tbl">ERASE</span>
+          </button>
+        </div>
+        <div class="tg" style="align-items:center;gap:7px;border:none;">
+          <label style="margin:0;font-size:9px;white-space:nowrap">Snap</label>
+          <input type="checkbox" id="snapToggle" checked="" style="width:auto;accent-color:var(--plasma)">
+          <label style="margin:0;font-size:9px;white-space:nowrap">Grid</label>
+          <input type="checkbox" id="gridToggle" checked="" style="width:auto;accent-color:var(--plasma)" onchange="A.drawGrid()">
+        </div>
+      </div>
+
+      <!-- Draw body -->
+      <div class="draw-body" style="flex:1;overflow:hidden;">
+        <!-- LEFT -->
+        <div class="lp">
+          <div class="ps">
+            <div class="pst">Layer / Pen</div>
+            <div class="cr">
+              <div class="cs active" style="background:#00b4d8" onclick="A.setColor(&#39;#00b4d8&#39;,this)" title="Cut"></div>
+              <div class="cs" style="background:#e24b4b" onclick="A.setColor(&#39;#e24b4b&#39;,this)" title="Center"></div>
+              <div class="cs" style="background:#f0a500" onclick="A.setColor(&#39;#f0a500&#39;,this)" title="Mark"></div>
+              <div class="cs" style="background:#2dd4a0" onclick="A.setColor(&#39;#2dd4a0&#39;,this)" title="Engrave"></div>
+              <div class="cs" style="background:#8b9dc3" onclick="A.setColor(&#39;#8b9dc3&#39;,this)" title="Dim"></div>
+              <input type="color" value="#00b4d8" id="customColor" style="width:24px;height:24px;padding:0;border:1px solid var(--border2);border-radius:3px;cursor:pointer;background:none;" onchange="A.setColor(this.value,null,true)">
+            </div>
+            <div class="pr">
+              <div><label>Width</label>
+                <select id="lineWidth"><option value="0.5">0.5 thin</option><option value="1.5" selected="">1.5</option><option value="2.5">2.5 cut</option><option value="4">4 bold</option></select>
+              </div>
+              <div><label>Style</label>
+                <select id="lineStyle"><option value="solid">Solid</option><option value="dash">Dash</option><option value="dot">Dot</option><option value="dashdot">Dash·dot</option></select>
+              </div>
+            </div>
+          </div>
+          <div class="ps">
+            <div class="pst">Grid &amp; Scale</div>
+            <div class="pr">
+              <div><label>Grid mm</label>
+                <select id="gridSize" onchange="A.setGrid(this.value)"><option value="5">5</option><option value="10" selected="">10</option><option value="20">20</option><option value="50">50</option></select>
+              </div>
+              <div><label>Scale</label>
+                <select id="scaleSelect" onchange="A.setScale(this.value)"><option value="1">1:10</option><option value="2" selected="">1:5</option><option value="4">1:2.5</option><option value="10">1:1</option></select>
+              </div>
+            </div>
+          </div>
+          <div class="ps">
+            <div class="pst">Go To Point</div>
+            <div class="pr">
+              <div><label>X mm</label><input type="number" id="inX" placeholder="0"></div>
+              <div><label>Y mm</label><input type="number" id="inY" placeholder="0"></div>
+            </div>
+            <button class="btn btn-g btn-full btn-sm" onclick="A.goTo()">GO</button>
+          </div>
+          <div class="ps">
+            <div class="pst">Quick Shapes</div>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <button class="btn btn-g btn-full btn-sm" onclick="A.preset(&#39;c2ft&#39;)">⬤ Circle Ø609.6mm</button>
+              <button class="btn btn-g btn-full btn-sm" onclick="A.preset(&#39;c1ft&#39;)">⬤ Circle Ø304.8mm</button>
+              <button class="btn btn-g btn-full btn-sm" onclick="A.preset(&#39;r600&#39;)">▬ Rect 600×400mm</button>
+              <button class="btn btn-g btn-full btn-sm" onclick="A.preset(&#39;ls&#39;)">⌐ L-Shape</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CANVAS -->
+        <div class="ca" id="canvasArea">
+          <canvas id="gc" width="1310" height="766"></canvas>
+          <canvas id="mc" width="1310" height="766"></canvas>
+          <div class="hb" id="hintBar">SELECT — Click shape to select</div>
+          <div class="ci">
+            <span id="coordDisp">X:368 Y:36 mm</span>
+            <span id="snapDisp" style="color:var(--success)">SNAP</span>
+            <span id="zcnt">0 shapes</span>
+            <span id="zlbl">100%</span>
+          </div>
+          <div class="zc">
+            <div class="zb" onclick="A.zoomIn()">+</div>
+            <div class="zb" onclick="A.zoomOut()">−</div>
+            <div class="zb" onclick="A.zoomFit()" title="Fit" style="font-size:9px">⊠</div>
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="rp">
+          <div class="ps">
+            <div class="pst">Shapes (<span id="scountR">0</span>)</div>
+            <div class="sl" id="shapeList"></div>
+          </div>
+          <div class="ps">
+            <div class="pst">Dimensions</div>
+            <table class="dt" id="dimTable"><tbody><tr><td class="dk">—</td><td class="dv">—</td></tr></tbody></table>
+          </div>
+          <div class="ps">
+            <div class="pst">Export</div>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <button class="btn btn-h btn-full btn-sm" onclick="A.exportDXF()">⬇ DXF</button>
+              <button class="btn btn-g btn-full btn-sm" onclick="A.exportSVG()">⬇ SVG</button>
+              <button class="btn btn-d btn-full btn-sm" onclick="A.clearAll()">✕ Clear</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /draw-body -->
+    </div><!-- /manual-mode -->
+
+    <!-- AI UPLOAD MODE -->
+    <div id="ai-mode" style="display:none;flex:1;overflow:hidden;">
+      <div class="ai-body">
+        <div class="ai-left">
+          <div class="upload-zone" id="dropZone">
+            <input type="file" id="fileInput" accept="image/*" onchange="AI.handleFile(event)">
+            <div style="font-size:32px;margin-bottom:6px">📐</div>
+            <div style="font-size:13px;font-weight:500;margin-bottom:3px">ပုံကြမ်း Upload</div>
+            <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">PNG / JPG / HEIC<br>Click or Drag &amp; Drop</div>
+          </div>
+          <div class="prev-wrap" id="prevWrap">
+            <img id="prevImg" src="file:///Users/khinemye/Downloads/plasmacam-pro-full.html" alt="">
+            <div class="prev-badge">LOADED</div>
+          </div>
+          <div>
+            <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+            <button class="ai-btn" id="aiBtn" onclick="AI.analyze()" disabled="" style="margin-top:6px">
+              <span>🤖</span> AI ပိုင်းခြား → Drawing ဆွဲ
+            </button>
+          </div>
+          <div class="sb" id="statusBox"></div>
+          <div id="aiResultArea" style="display:none">
+            <div class="pst">DETECTED</div>
+            <div class="chip-wrap" id="chipWrap" style="margin-bottom:8px"></div>
+            <div class="pst">DESCRIPTION</div>
+            <div class="ai-desc" id="aiDescEl"></div>
+          </div>
+          <div id="aiDimsArea" style="display:none">
+            <div class="pst">MEASUREMENTS</div>
+            <table class="dt" id="aiDimTable"></table>
+          </div>
+          <div id="aiExport" style="display:none;flex-direction:column;gap:5px;">
+            <button class="btn btn-h btn-full btn-sm" onclick="A.exportDXF()">⬇ DXF Export</button>
+            <button class="btn btn-g btn-full btn-sm" onclick="A.exportSVG()">⬇ SVG Export</button>
+            <button class="btn btn-g btn-full btn-sm" onclick="AI.reset()">↺ Reset</button>
+          </div>
+        </div>
+        <!-- Shares the same canvas as manual mode -->
+        <div class="ca" id="aiCanvasArea" style="position:relative;overflow:hidden;">
+          <canvas id="gc2"></canvas>
+          <canvas id="mc2"></canvas>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;" id="aiEmptyHint">
+            <div style="font-size:40px;margin-bottom:10px;opacity:.3">✏️</div>
+            <div style="font-family:var(--mono);font-size:11px;color:var(--muted);opacity:.5;line-height:1.8">ဘယ်ဘက်မှ ပုံကြမ်းဓါတ်ပုံ upload<br>AI က shapes တွေ ပိုင်းခြားပြီး<br>CAD drawing ဆွဲပေးမည်</div>
+          </div>
+          <div class="ci" id="aiCI" style="display:none">
+            <span id="aiCoord">X:0 Y:0</span>
+            <span id="aiZlbl">100%</span>
+            <span id="aiScnt">0 shapes</span>
+          </div>
+          <div class="zc">
+            <div class="zb" onclick="AI.zIn()">+</div>
+            <div class="zb" onclick="AI.zOut()">−</div>
+            <div class="zb" onclick="AI.zFit()" style="font-size:9px">⊠</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /ai-mode -->
+
+  </div>
+</div><!-- /panel-draw -->
+
+<!-- ═══════════ COST PANEL ═══════════ -->
+<div class="panel active" id="panel-cost">
+  <div class="cost-body">
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="card">
+        <div class="sl3">Material Spec</div>
+        <div class="g2">
+          <div class="fg"><label>Material</label>
+            <select id="c-mat" onchange="C.calc()">
+              <option value="0.8">Mild Steel (MS)</option><option value="1.5">Stainless Steel</option>
+              <option value="0.6">Aluminum</option><option value="0.9">Galvanized Steel</option>
+            </select>
+          </div>
+          <div class="fg"><label>Thickness (mm)</label>
+            <select id="c-thick" onchange="C.calc()">
+              <option value="3">3</option><option value="6" selected="">6</option><option value="8">8</option>
+              <option value="10">10</option><option value="12">12</option><option value="16">16</option><option value="20">20</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div class="fg"><label>Width/Diam (mm)</label><input type="number" id="c-w" value="610" oninput="C.calc()"></div>
+          <div class="fg"><label>Height mm (rect)</label><input type="number" id="c-h" value="610" oninput="C.calc()"></div>
+          <div class="fg"><label>Shape</label>
+            <select id="c-shape" onchange="C.calc()"><option value="circle">Circle</option><option value="rect">Rectangle</option></select>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="fg"><label>အရေအတွက် (ခု)</label><input type="number" id="c-qty" value="1" min="1" oninput="C.calc()"></div>
+          <div class="fg"><label>နှုန်းထား Ks/kg</label><input type="number" id="c-price" value="2500" oninput="C.calc()"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="sl3">Cutting Cost</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div class="fg"><label>Gas Ks/hr</label><input type="number" id="c-gas" value="15000" oninput="C.calc()"></div>
+          <div class="fg"><label>Setup Ks</label><input type="number" id="c-setup" value="5000" oninput="C.calc()"></div>
+          <div class="fg"><label>Margin %</label><input type="number" id="c-margin" value="20" oninput="C.calc()"></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="cost-res">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted)">TOTAL ESTIMATE</div>
+        <div class="cost-total" id="grandTotal">39,241 Ks</div>
+        <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">VAT မပါ — ခန့်မှန်းကိန်း</div>
+        <div id="costBreakdown" style="margin-top:12px;"><div class="bdr"><span>သံပြားကုန်ကျ (11.01kg×1)</span><span>27,530 Ks</span></div><div class="bdr"><span>Plasma ဖြတ် (41sec)</span><span>171 Ks</span></div><div class="bdr"><span>Setup</span><span>5,000 Ks</span></div><div class="bdr"><span>Margin 20%</span><span>6,540 Ks</span></div><div class="bdr"><span>TOTAL ×1</span><span>39,241 Ks</span></div></div>
+      </div>
+      <div class="card">
+        <div class="sl3">Spec</div>
+        <table class="dt" id="costSpec"><tbody><tr><td class="dk">Shape</td><td class="dv">Circle</td></tr><tr><td class="dk">Size</td><td class="dv">Ø610mm</td></tr><tr><td class="dk">Thickness</td><td class="dv">6mm</td></tr><tr><td class="dk">Weight</td><td class="dv">11.01 kg</td></tr><tr><td class="dk">Cut speed</td><td class="dv">2800 mm/min</td></tr><tr><td class="dk">Cut length</td><td class="dv">1916 mm</td></tr></tbody></table>
+      </div>
+      <button class="btn btn-p btn-full" onclick="C.toOrder()">+ Order ထည့်သွင်း</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ ORDERS PANEL ═══════════ -->
+<div class="panel" id="panel-orders">
+  <div class="orders-body">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div>
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);margin-bottom:3px">ORDER MANAGEMENT</div>
+        <div style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="orderSubtitle">Order 3 ခု</div>
+      </div>
+      <button class="btn btn-p btn-sm" onclick="O.openModal()">+ Order အသစ်</button>
+    </div>
+    <div class="stats-bar" id="statsBar"><div class="sc"><div class="sl2">TOTAL ORDERS</div><div class="sv">3</div></div><div class="sc"><div class="sl2">PENDING</div><div class="sv h">1</div></div><div class="sc"><div class="sl2">CUTTING</div><div class="sv p">1</div></div><div class="sc"><div class="sl2">REVENUE</div><div class="sv g">85,000 Ks</div></div></div>
+    <div class="otw">
+      <table><thead><tr>
+        <th>ORDER ID</th><th>Customer</th><th>Shape</th><th>Material</th><th>Qty</th><th>Total Ks</th><th>Status</th><th>Action</th>
+      </tr></thead>
+      <tbody id="ordersBody"><tr>
+          <td style="font-family:var(--mono);color:var(--plasma);font-size:11px">ORD-001</td>
+          <td><div style="font-weight:500">ဦးကျော်ဇင်</div><div style="font-size:10px;color:var(--muted);font-family:var(--mono)">09-777123456</div></td>
+          <td><div>Circle</div><div style="font-size:10px;color:var(--plasma);font-family:var(--mono)">Ø609.6mm</div></td>
+          <td><div>Mild Steel</div><div style="font-size:10px;color:var(--muted);font-family:var(--mono)">6mm</div></td>
+          <td style="font-family:var(--mono);text-align:center">2</td>
+          <td style="font-family:var(--mono);color:var(--success)">85,000</td>
+          <td><span class="badge bd">DONE</span></td>
+          <td><div style="display:flex;gap:5px;align-items:center">
+            <button class="btn btn-g btn-sm" onclick="O.edit(&#39;ORD-001&#39;)">✏</button>
+            <select class="btn btn-g btn-sm" style="padding:3px 6px;font-size:9px" onchange="O.chStatus(&#39;ORD-001&#39;,this.value)"><option value="">Status</option><option value="pending">Pending</option><option value="cutting">Cutting</option><option value="done">Done</option><option value="cancelled">Cancel</option></select>
+            <button class="btn btn-d btn-sm" onclick="O.del(&#39;ORD-001&#39;)">🗑</button>
+          </div></td>
+        </tr><tr>
+          <td style="font-family:var(--mono);color:var(--plasma);font-size:11px">ORD-002</td>
+          <td><div style="font-weight:500">မအေးသူဇာ</div><div style="font-size:10px;color:var(--muted);font-family:var(--mono)">09-888234567</div></td>
+          <td><div>Rectangle</div><div style="font-size:10px;color:var(--plasma);font-family:var(--mono)">500×300mm</div></td>
+          <td><div>Stainless Steel</div><div style="font-size:10px;color:var(--muted);font-family:var(--mono)">3mm</div></td>
+          <td style="font-family:var(--mono);text-align:center">5</td>
+          <td style="font-family:var(--mono);color:var(--success)">240,000</td>
+          <td><span class="badge bc">CUTTING</span></td>
+          <td><div style="display:flex;gap:5px;align-items:center">
+            <button class="btn btn-g btn-sm" onclick="O.edit(&#39;ORD-002&#39;)">✏</button>
+            <select class="btn btn-g btn-sm" style="padding:3px 6px;font-size:9px" onchange="O.chStatus(&#39;ORD-002&#39;,this.value)"><option value="">Status</option><option value="pending">Pending</option><option value="cutting">Cutting</option><option value="done">Done</option><option value="cancelled">Cancel</option></select>
+            <button class="btn btn-d btn-sm" onclick="O.del(&#39;ORD-002&#39;)">🗑</button>
+          </div></td>
+        </tr><tr>
+          <td style="font-family:var(--mono);color:var(--plasma);font-size:11px">ORD-003</td>
+          <td><div style="font-weight:500">ဦးမင်းသိန်း</div><div style="font-size:10px;color:var(--muted);font-family:var(--mono)">09-999345678</div></td>
+          <td><div>L-Shape</div><div style="font-size:10px;color:var(--plasma);font-family:var(--mono)">400×200mm</div></td>
+          <td><div>Mild Steel</div><div style="font-size:10px;color:var(--muted);font-family:var(--mono)">8mm</div></td>
+          <td style="font-family:var(--mono);text-align:center">10</td>
+          <td style="font-family:var(--mono);color:var(--success)">180,000</td>
+          <td><span class="badge bp">PENDING</span></td>
+          <td><div style="display:flex;gap:5px;align-items:center">
+            <button class="btn btn-g btn-sm" onclick="O.edit(&#39;ORD-003&#39;)">✏</button>
+            <select class="btn btn-g btn-sm" style="padding:3px 6px;font-size:9px" onchange="O.chStatus(&#39;ORD-003&#39;,this.value)"><option value="">Status</option><option value="pending">Pending</option><option value="cutting">Cutting</option><option value="done">Done</option><option value="cancelled">Cancel</option></select>
+            <button class="btn btn-d btn-sm" onclick="O.del(&#39;ORD-003&#39;)">🗑</button>
+          </div></td>
+        </tr></tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="moverlay" id="modal">
+  <div class="modal">
+    <div class="mh"><div class="mt" id="modalTitle">Order အသစ်</div><button class="mc-btn" onclick="O.close()">✕</button></div>
+    <div class="g2">
+      <div class="fg"><label>Customer အမည်</label><input type="text" id="m-name" placeholder="ဦး/ဒေါ် ..."></div>
+      <div class="fg"><label>ဖုန်း</label><input type="text" id="m-phone" placeholder="09..."></div>
+    </div>
+    <div class="g2">
+      <div class="fg"><label>Shape</label><select id="m-shape"><option>Circle</option><option>Rectangle</option><option>L-Shape</option><option>Custom</option></select></div>
+      <div class="fg"><label>Dimensions</label><input type="text" id="m-dim" placeholder="Ø610mm"></div>
+    </div>
+    <div class="g2">
+      <div class="fg"><label>Material</label><select id="m-mat"><option>Mild Steel</option><option>Stainless Steel</option><option>Aluminum</option><option>Galvanized Steel</option></select></div>
+      <div class="fg"><label>Thickness mm</label><input type="number" id="m-thick" value="6"></div>
+    </div>
+    <div class="g2">
+      <div class="fg"><label>အရေအတွက်</label><input type="number" id="m-qty" value="1"></div>
+      <div class="fg"><label>Total Ks</label><input type="number" id="m-total" placeholder="0"></div>
+    </div>
+    <div class="fg"><label>Status</label>
+      <select id="m-status"><option value="pending">Pending</option><option value="cutting">Cutting</option><option value="done">Done</option><option value="cancelled">Cancelled</option></select>
+    </div>
+    <div class="fg"><label>မှတ်စု</label><textarea id="m-note" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--mono);font-size:11px;resize:vertical;min-height:60px;outline:none;" placeholder="ညွှန်ကြားချက်..."></textarea></div>
+    <div class="ma">
+      <button class="btn btn-g" onclick="O.close()">ပယ်ဖျက်</button>
+      <button class="btn btn-p" onclick="O.save()">သိမ်းဆည်း</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════
+//  SHARED UTILITIES
+// ════════════════════════════════════════════════
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+function dist2(a,b){return Math.sqrt((a.x-b.x)**2+(a.y-b.y)**2);}
+function distSeg(p,a,b){const dx=b.x-a.x,dy=b.y-a.y;if(!dx&&!dy)return dist2(p,a);const t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.y-a.y)*dy)/(dx*dx+dy*dy)));return dist2(p,{x:a.x+t*dx,y:a.y+t*dy});}
+
+// ════════════════════════════════════════════════
+//  TAB SWITCHING
+// ════════════════════════════════════════════════
+function switchMainTab(id){
+  document.querySelectorAll('.ttab').forEach((t,i)=>t.classList.toggle('active',['draw','cost','orders'][i]===id));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+id));
+  if(id==='orders') O.render();
+  if(id==='cost') C.calc();
+}
+
+function setDrawMode(m){
+  document.getElementById('manual-mode').style.display = m==='manual'?'flex':'none';
+  document.getElementById('ai-mode').style.display     = m==='ai'?'flex':'none';
+  document.getElementById('mode-manual').classList.toggle('active',m==='manual');
+  document.getElementById('mode-ai').classList.toggle('active',m==='ai');
+  if(m==='ai') AI.syncCanvas();
+}
+
+// ════════════════════════════════════════════════
+//  DRAWING ENGINE  (namespace A)
+// ════════════════════════════════════════════════
+const A = (()=>{
+  const gc=document.getElementById('gc'), mc=document.getElementById('mc');
+  const gctx=gc.getContext('2d'), ctx=mc.getContext('2d');
+  const area=document.getElementById('canvasArea');
+  let shapes=[], undoStack=[], tool='select', selId=null;
+  let penColor='#00b4d8', penWidth=1.5, penStyle='solid';
+  let pxMm=2, gridMm=10, snapOn=true;
+  let isDrawing=false, polyPts=[], freePts=[], startPt=null, prevPt=null;
+  let arcPts=[], arcState=0, dimPts=[], dimState=0;
+  let isPan=false, panStart=null, panX=0, panY=0, zoom=1;
+  let idCnt=0;
+
+  function resize(){
+    const w=area.clientWidth, h=area.clientHeight;
+    [gc,mc].forEach(c=>{c.width=w;c.height=h;});
+    drawGrid(); redraw();
+  }
+  window.addEventListener('resize',resize);
+  setTimeout(()=>{panX=mc.width/2;panY=mc.height/2;resize();},80);
+
+  function toC(x,y){return{x:x*pxMm*zoom+panX,y:-y*pxMm*zoom+panY};}
+  function toM(x,y){return{x:(x-panX)/(pxMm*zoom),y:-(y-panY)/(pxMm*zoom)};}
+  function snp(x,y){if(!snapOn||!document.getElementById('snapToggle').checked)return{x,y};const s=gridMm;return{x:Math.round(x/s)*s,y:Math.round(y/s)*s};}
+  function getMM(e){const r=mc.getBoundingClientRect();return snp(...Object.values(toM(e.clientX-r.left,e.clientY-r.top)));}
+
+  function drawGrid(){
+    gctx.clearRect(0,0,gc.width,gc.height);
+    if(!document.getElementById('gridToggle').checked)return;
+    const step=gridMm*pxMm*zoom,ox=panX%step,oy=panY%step;
+    gctx.strokeStyle='rgba(0,180,216,0.06)';gctx.lineWidth=.5;
+    for(let x=ox;x<gc.width;x+=step){gctx.beginPath();gctx.moveTo(x,0);gctx.lineTo(x,gc.height);gctx.stroke();}
+    for(let y=oy;y<gc.height;y+=step){gctx.beginPath();gctx.moveTo(0,y);gctx.lineTo(gc.width,y);gctx.stroke();}
+    gctx.strokeStyle='rgba(226,75,75,0.2)';gctx.lineWidth=1;
+    gctx.beginPath();gctx.moveTo(panX,0);gctx.lineTo(panX,gc.height);gctx.stroke();
+    gctx.beginPath();gctx.moveTo(0,panY);gctx.lineTo(gc.width,panY);gctx.stroke();
+  }
+
+  function applyStyle(s){
+    ctx.strokeStyle=s.color||'#00b4d8';ctx.lineWidth=(s.width||1.5);ctx.lineCap='round';ctx.lineJoin='round';
+    const d={solid:[],dash:[8,5],dot:[2,5],dashdot:[8,4,2,4]};ctx.setLineDash(d[s.style||'solid']||[]);
+  }
+
+  function drawShape(s,sel=false){
+    ctx.save();applyStyle(s);
+    if(sel){ctx.shadowColor=s.color;ctx.shadowBlur=7;}
+    const c=p=>toC(p.x,p.y);
+    if(s.type==='line'){const p1=c(s.p1),p2=c(s.p2);ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.stroke();}
+    else if(s.type==='polyline'||s.type==='freehand'){
+      if(s.pts.length<2){ctx.restore();return;}
+      const pp=s.pts.map(c);ctx.beginPath();ctx.moveTo(pp[0].x,pp[0].y);pp.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));
+      if(s.closed)ctx.closePath();ctx.stroke();
+      if(s.closed){ctx.fillStyle=s.color+'10';ctx.fill();}
+    }
+    else if(s.type==='rect'){
+      const p1=c(s.p1),p2=c(s.p2),x=Math.min(p1.x,p2.x),y=Math.min(p1.y,p2.y),w=Math.abs(p2.x-p1.x),h=Math.abs(p2.y-p1.y);
+      ctx.beginPath();ctx.rect(x,y,w,h);ctx.stroke();ctx.fillStyle=s.color+'10';ctx.fill();
+    }
+    else if(s.type==='circle'){
+      const cc=c(s.center),r=s.radius*pxMm*zoom;
+      ctx.beginPath();ctx.arc(cc.x,cc.y,r,0,Math.PI*2);ctx.stroke();ctx.fillStyle=s.color+'10';ctx.fill();
+      ctx.fillStyle=s.color;ctx.beginPath();ctx.arc(cc.x,cc.y,2.5,0,Math.PI*2);ctx.fill();
+    }
+    else if(s.type==='ellipse'){
+      const cc=c(s.center),rx=s.rx*pxMm*zoom,ry=s.ry*pxMm*zoom;
+      ctx.beginPath();ctx.ellipse(cc.x,cc.y,rx,ry,0,0,Math.PI*2);ctx.stroke();ctx.fillStyle=s.color+'10';ctx.fill();
+    }
+    else if(s.type==='arc'){
+      const cc=c(s.center),r=s.radius*pxMm*zoom;
+      ctx.beginPath();ctx.arc(cc.x,cc.y,r,s.a1,s.a2);ctx.stroke();
+    }
+    else if(s.type==='text'){
+      const cp=c(s.pos);ctx.fillStyle=s.color;ctx.setLineDash([]);
+      ctx.font=`${(s.fs||11)*zoom}px "Share Tech Mono"`;ctx.fillText(s.text,cp.x,cp.y);
+    }
+    else if(s.type==='dim'){
+      const p1=toC(s.p1.x,s.p1.y),p2=toC(s.p2.x,s.p2.y);
+      ctx.strokeStyle='rgba(139,157,195,.7)';ctx.lineWidth=.8;ctx.setLineDash([4,3]);
+      [[p1.x,p1.y-10,p1.x,p1.y+10],[p2.x,p2.y-10,p2.x,p2.y+10],[p1.x,p1.y,p2.x,p2.y]].forEach(([x1,y1,x2,y2])=>{ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();});
+      const mx=(p1.x+p2.x)/2,my=(p1.y+p2.y)/2,d=dist2(s.p1,s.p2).toFixed(1);
+      ctx.fillStyle='rgba(13,15,20,.9)';ctx.fillRect(mx-26,my-8,52,14);
+      ctx.fillStyle='#8b9dc3';ctx.font=`10px var(--mono)`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(d+'mm',mx,my);
+    }
+    if(sel){
+      ctx.setLineDash([4,3]);ctx.strokeStyle='rgba(255,255,255,.4)';ctx.lineWidth=.7;ctx.shadowBlur=0;
+      const b=bbox(s);if(b){const p1=toC(b.x,b.y+b.h),p2=toC(b.x+b.w,b.y);ctx.beginPath();ctx.rect(p1.x-4,p1.y-4,p2.x-p1.x+8,p2.y-p1.y+8);ctx.stroke();}
+    }
+    ctx.restore();
+  }
+
+  function bbox(s){
+    if(s.type==='circle')return{x:s.center.x-s.radius,y:s.center.y-s.radius,w:s.radius*2,h:s.radius*2};
+    if(s.type==='rect'){const x=Math.min(s.p1.x,s.p2.x),y=Math.min(s.p1.y,s.p2.y);return{x,y,w:Math.abs(s.p2.x-s.p1.x),h:Math.abs(s.p2.y-s.p1.y)};}
+    if(s.type==='line')return{x:Math.min(s.p1.x,s.p2.x),y:Math.min(s.p1.y,s.p2.y),w:Math.abs(s.p2.x-s.p1.x)||1,h:Math.abs(s.p2.y-s.p1.y)||1};
+    if((s.type==='polyline'||s.type==='freehand')&&s.pts.length){const xs=s.pts.map(p=>p.x),ys=s.pts.map(p=>p.y),mn={x:Math.min(...xs),y:Math.min(...ys)};return{x:mn.x,y:mn.y,w:Math.max(...xs)-mn.x||1,h:Math.max(...ys)-mn.y||1};}
+    if(s.type==='ellipse')return{x:s.center.x-s.rx,y:s.center.y-s.ry,w:s.rx*2,h:s.ry*2};
+    return null;
+  }
+
+  function drawPreview(){
+    if(!prevPt)return;
+    const cp=toC(prevPt.x,prevPt.y);
+    ctx.save();ctx.strokeStyle=penColor;ctx.lineWidth=penWidth;ctx.setLineDash([6,4]);ctx.globalAlpha=.65;
+    if(tool==='line'&&startPt){
+      const sp=toC(startPt.x,startPt.y);ctx.beginPath();ctx.moveTo(sp.x,sp.y);ctx.lineTo(cp.x,cp.y);ctx.stroke();
+      ctx.fillStyle=penColor;ctx.font='9px var(--mono)';ctx.setLineDash([]);ctx.fillText(dist2(startPt,prevPt).toFixed(1)+'mm',(sp.x+cp.x)/2+4,(sp.y+cp.y)/2-4);
+    }
+    else if(tool==='polyline'&&polyPts.length){
+      const last=toC(polyPts[polyPts.length-1].x,polyPts[polyPts.length-1].y);
+      ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(cp.x,cp.y);ctx.stroke();
+      polyPts.forEach(p=>{const pp=toC(p.x,p.y);ctx.fillStyle=penColor;ctx.beginPath();ctx.arc(pp.x,pp.y,2.5,0,Math.PI*2);ctx.fill();});
+    }
+    else if(tool==='rect'&&startPt){
+      const sp=toC(startPt.x,startPt.y),x=Math.min(sp.x,cp.x),y=Math.min(sp.y,cp.y),w=Math.abs(cp.x-sp.x),h=Math.abs(cp.y-sp.y);
+      ctx.fillStyle=penColor+'0e';ctx.fillRect(x,y,w,h);ctx.beginPath();ctx.rect(x,y,w,h);ctx.stroke();
+      ctx.fillStyle=penColor;ctx.font='9px var(--mono)';ctx.setLineDash([]);
+      ctx.fillText(`${Math.abs(prevPt.x-startPt.x).toFixed(0)}×${Math.abs(prevPt.y-startPt.y).toFixed(0)}mm`,(sp.x+cp.x)/2,(sp.y+cp.y)/2);
+    }
+    else if(tool==='circle'&&startPt){
+      const sp=toC(startPt.x,startPt.y),r=dist2(startPt,prevPt)*pxMm*zoom;
+      ctx.fillStyle=penColor+'0e';ctx.beginPath();ctx.arc(sp.x,sp.y,r,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.fillStyle=penColor;ctx.beginPath();ctx.arc(sp.x,sp.y,2.5,0,Math.PI*2);ctx.fill();
+      ctx.font='9px var(--mono)';ctx.setLineDash([]);ctx.fillText('Ø'+(dist2(startPt,prevPt)*2).toFixed(1)+'mm',sp.x+r*.7,sp.y-r*.7);
+    }
+    else if(tool==='ellipse'&&startPt){
+      const sp=toC(startPt.x,startPt.y),rx=Math.abs(cp.x-sp.x),ry=Math.abs(cp.y-sp.y);
+      ctx.fillStyle=penColor+'0e';ctx.beginPath();ctx.ellipse(sp.x,sp.y,rx||1,ry||1,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+    }
+    ctx.restore();
+    ctx.save();ctx.strokeStyle='rgba(255,255,255,.15)';ctx.lineWidth=.4;ctx.setLineDash([]);
+    ctx.beginPath();ctx.moveTo(cp.x,0);ctx.lineTo(cp.x,mc.height);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,cp.y);ctx.lineTo(mc.width,cp.y);ctx.stroke();
+    ctx.restore();
+  }
+
+  function redraw(){
+    ctx.clearRect(0,0,mc.width,mc.height);
+    shapes.forEach(s=>drawShape(s,s.id===selId));
+    if(isDrawing)drawPreview();
+    updateUI();
+  }
+
+  function updateUI(){
+    const cnt=shapes.length;
+    document.getElementById('zcnt').textContent=cnt+' shapes';
+    document.getElementById('scountR').textContent=cnt;
+    document.getElementById('modeHint').textContent='Shapes: '+cnt;
+    // Shape list
+    const icons={line:'╱',polyline:'◇',freehand:'〜',rect:'▭',circle:'◯',ellipse:'⬭',arc:'⌒',text:'T',dim:'↔'};
+    document.getElementById('shapeList').innerHTML=shapes.map(s=>`<div class="si${s.id===selId?' sel':''}" onclick="A.sel(${s.id})"><span>${icons[s.type]||'?'} ${s.type.toUpperCase()} #${s.id}</span><span class="sd" onclick="event.stopPropagation();A.del(${s.id})">×</span></div>`).join('');
+    // Dim table
+    const s=shapes.find(x=>x.id===selId);
+    if(!s){document.getElementById('dimTable').innerHTML='<tr><td class="dk">—</td><td class="dv">—</td></tr>';return;}
+    let rows=`<tr><td class="dk">Type</td><td class="dv">${s.type.toUpperCase()}</td></tr>`;
+    if(s.type==='circle'){rows+=`<tr><td class="dk">Ø</td><td class="dv">${(s.radius*2).toFixed(2)} mm</td></tr><tr><td class="dk">R</td><td class="dv">${s.radius.toFixed(2)} mm</td></tr><tr><td class="dk">Circ.</td><td class="dv">${(Math.PI*s.radius*2).toFixed(1)} mm</td></tr><tr><td class="dk">Area</td><td class="dv">${(Math.PI*s.radius**2/100).toFixed(2)} cm²</td></tr>`;}
+    if(s.type==='rect'){const w=Math.abs(s.p2.x-s.p1.x),h=Math.abs(s.p2.y-s.p1.y);rows+=`<tr><td class="dk">W</td><td class="dv">${w.toFixed(2)} mm</td></tr><tr><td class="dk">H</td><td class="dv">${h.toFixed(2)} mm</td></tr><tr><td class="dk">Area</td><td class="dv">${(w*h/100).toFixed(2)} cm²</td></tr><tr><td class="dk">Perim.</td><td class="dv">${(2*(w+h)).toFixed(1)} mm</td></tr>`;}
+    if(s.type==='line'){const d=dist2(s.p1,s.p2);rows+=`<tr><td class="dk">Length</td><td class="dv">${d.toFixed(2)} mm</td></tr>`;}
+    if(s.type==='polyline'||s.type==='freehand'){let l=0;for(let i=0;i<s.pts.length-1;i++)l+=dist2(s.pts[i],s.pts[i+1]);rows+=`<tr><td class="dk">Points</td><td class="dv">${s.pts.length}</td></tr><tr><td class="dk">Length</td><td class="dv">${l.toFixed(1)} mm</td></tr>`;}
+    document.getElementById('dimTable').innerHTML=rows;
+  }
+
+  // Mouse
+  mc.addEventListener('mousemove',e=>{
+    const r=mc.getBoundingClientRect(),mm=getMM(e);
+    const rawMM=toM(e.clientX-r.left,e.clientY-r.top);
+    document.getElementById('coordDisp').textContent=`X:${rawMM.x.toFixed(0)} Y:${rawMM.y.toFixed(0)} mm`;
+    prevPt=mm;
+    if(isPan&&panStart){panX+=e.clientX-panStart.x;panY+=e.clientY-panStart.y;panStart={x:e.clientX,y:e.clientY};drawGrid();}
+    if(tool==='freehand'&&isDrawing)freePts.push({x:mm.x,y:mm.y});
+    redraw();
+  });
+
+  mc.addEventListener('mousedown',e=>{
+    if(e.button===1||(e.button===0&&e.altKey)){isPan=true;panStart={x:e.clientX,y:e.clientY};mc.style.cursor='grabbing';return;}
+    const mm=getMM(e);
+    if(tool==='select'){selId=hitTest(mm.x,mm.y);redraw();return;}
+    if(tool==='erase'){const h=hitTest(mm.x,mm.y);if(h){saveUndo();shapes=shapes.filter(s=>s.id!==h);redraw();}return;}
+    if(tool==='freehand'){if(!isDrawing){saveUndo();isDrawing=true;freePts=[{x:mm.x,y:mm.y}];}return;}
+    if(tool==='polyline'){
+      if(!isDrawing){saveUndo();isDrawing=true;polyPts=[{x:mm.x,y:mm.y}];}
+      else{
+        if(polyPts.length>2&&dist2(mm,polyPts[0])<12/(pxMm*zoom)){commit({type:'polyline',id:++idCnt,pts:[...polyPts],closed:true,color:penColor,width:penWidth,style:penStyle});polyPts=[];isDrawing=false;}
+        else polyPts.push({x:mm.x,y:mm.y});
+      }redraw();return;
+    }
+    if(tool==='arc'){
+      arcPts.push({x:mm.x,y:mm.y});
+      if(arcState===0)arcState=1;
+      else if(arcState===1)arcState=2;
+      else{const cx=(arcPts[0].x+arcPts[1].x)/2,cy=(arcPts[0].y+arcPts[1].y)/2,r=dist2({x:cx,y:cy},arcPts[0]);commit({type:'arc',id:++idCnt,center:{x:cx,y:cy},radius:r,a1:Math.atan2(arcPts[0].y-cy,arcPts[0].x-cx),a2:Math.atan2(arcPts[1].y-cy,arcPts[1].x-cx),color:penColor,width:penWidth,style:penStyle});arcPts=[];arcState=0;}
+      redraw();return;
+    }
+    if(tool==='dim'){
+      dimPts.push({x:mm.x,y:mm.y});
+      if(dimState===0)dimState=1;
+      else{commit({type:'dim',id:++idCnt,p1:dimPts[0],p2:dimPts[1],color:'#8b9dc3',width:.8,style:'dash'});dimPts=[];dimState=0;}
+      redraw();return;
+    }
+    if(tool==='text'){const t=prompt('ရေးထည့်မည့် စာ:','LABEL');if(t){saveUndo();commit({type:'text',id:++idCnt,pos:{x:mm.x,y:mm.y},text:t,color:penColor,fs:11,width:1,style:'solid'});}redraw();return;}
+    isDrawing=true;startPt={x:mm.x,y:mm.y};
+  });
+
+  mc.addEventListener('mouseup',e=>{
+    if(isPan){isPan=false;panStart=null;mc.style.cursor='crosshair';return;}
+    const mm=getMM(e);
+    if(tool==='freehand'&&isDrawing){if(freePts.length>2)commit({type:'freehand',id:++idCnt,pts:[...freePts],color:penColor,width:penWidth,style:penStyle});freePts=[];isDrawing=false;redraw();return;}
+    if(!isDrawing||!startPt)return;
+    if(tool==='line'&&dist2(startPt,mm)>.5)commit({type:'line',id:++idCnt,p1:{...startPt},p2:{...mm},color:penColor,width:penWidth,style:penStyle});
+    else if(tool==='rect'&&Math.abs(mm.x-startPt.x)>1&&Math.abs(mm.y-startPt.y)>1)commit({type:'rect',id:++idCnt,p1:{...startPt},p2:{...mm},color:penColor,width:penWidth,style:penStyle});
+    else if(tool==='circle'&&dist2(startPt,mm)>.5)commit({type:'circle',id:++idCnt,center:{...startPt},radius:dist2(startPt,mm),color:penColor,width:penWidth,style:penStyle});
+    else if(tool==='ellipse'&&Math.abs(mm.x-startPt.x)>.5&&Math.abs(mm.y-startPt.y)>.5)commit({type:'ellipse',id:++idCnt,center:{...startPt},rx:Math.abs(mm.x-startPt.x),ry:Math.abs(mm.y-startPt.y),color:penColor,width:penWidth,style:penStyle});
+    isDrawing=false;startPt=null;redraw();
+  });
+
+  mc.addEventListener('dblclick',()=>{
+    if(tool==='polyline'&&isDrawing&&polyPts.length>=2){commit({type:'polyline',id:++idCnt,pts:[...polyPts],closed:false,color:penColor,width:penWidth,style:penStyle});polyPts=[];isDrawing=false;redraw();}
+  });
+  mc.addEventListener('contextmenu',e=>{
+    e.preventDefault();
+    if(tool==='polyline'&&isDrawing&&polyPts.length>=2){commit({type:'polyline',id:++idCnt,pts:[...polyPts],closed:false,color:penColor,width:penWidth,style:penStyle});polyPts=[];isDrawing=false;}
+    else{isDrawing=false;startPt=null;polyPts=[];arcPts=[];arcState=0;dimPts=[];dimState=0;}
+    redraw();
+  });
+  mc.addEventListener('wheel',e=>{
+    e.preventDefault();const f=e.deltaY<0?1.12:.89;
+    const r=mc.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+    panX=mx-(mx-panX)*f;panY=my-(my-panY)*f;
+    zoom=Math.min(20,Math.max(.05,zoom*f));
+    document.getElementById('zlbl').textContent=Math.round(zoom*100)+'%';
+    drawGrid();redraw();
+  },{passive:false});
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'){isDrawing=false;startPt=null;polyPts=[];arcPts=[];arcState=0;dimPts=[];dimState=0;redraw();}
+    if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo();}
+    if(e.key==='Delete'&&selId){saveUndo();shapes=shapes.filter(s=>s.id!==selId);selId=null;redraw();}
+    const tk={l:'line',p:'polyline',f:'freehand',r:'rect',c:'circle',e:'ellipse',a:'arc',t:'text',d:'dim',s:'select',x:'erase'};
+    if(!e.ctrlKey&&!e.metaKey&&tk[e.key])setTool(tk[e.key]);
+  });
+
+  function hitTest(mx,my){
+    const t=10/(pxMm*zoom);
+    for(let i=shapes.length-1;i>=0;i--){
+      const s=shapes[i];
+      if(s.type==='circle'&&Math.abs(dist2({x:mx,y:my},s.center)-s.radius)<t)return s.id;
+      if(s.type==='line'&&distSeg({x:mx,y:my},s.p1,s.p2)<t)return s.id;
+      if(s.type==='rect'){const x1=Math.min(s.p1.x,s.p2.x),x2=Math.max(s.p1.x,s.p2.x),y1=Math.min(s.p1.y,s.p2.y),y2=Math.max(s.p1.y,s.p2.y);if(mx>=x1-t&&mx<=x2+t&&my>=y1-t&&my<=y2+t)return s.id;}
+      if((s.type==='polyline'||s.type==='freehand')&&s.pts){for(let j=0;j<s.pts.length-1;j++)if(distSeg({x:mx,y:my},s.pts[j],s.pts[j+1])<t)return s.id;}
+    }return null;
+  }
+
+  function saveUndo(){undoStack.push(JSON.stringify(shapes));if(undoStack.length>30)undoStack.shift();}
+  function commit(s){shapes.push(s);selId=s.id;}
+
+  function setTool(t){
+    tool=t;isDrawing=false;startPt=null;polyPts=[];arcPts=[];arcState=0;dimPts=[];dimState=0;
+    document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('active'));
+    const el=document.getElementById('tool-'+t);if(el)el.classList.add('active');
+    const hints={select:'Click to select. Delete = remove.',line:'Click drag. (L)',polyline:'Click vertices. Dbl-click or right-click finish. (P)',freehand:'Drag freely. (F)',rect:'Drag. (R)',circle:'Center → drag radius. (C)',ellipse:'Center → drag. (E)',arc:'3 clicks. (A)',text:'Click position. (T)',dim:'2 clicks for dim. (D)',erase:'Click to delete. (X)'};
+    document.getElementById('hintBar').textContent=t.toUpperCase()+' — '+(hints[t]||'');
+    redraw();
+  }
+
+  // Load shapes from AI result
+  function loadShapes(newShapes){saveUndo();shapes=[...shapes,...newShapes];idCnt=Math.max(idCnt,...newShapes.map(s=>s.id||0));selId=null;drawGrid();redraw();zoomFit();}
+  function getShapes(){return shapes;}
+
+  return{
+    drawGrid,redraw,setTool,
+    setColor(c,el,custom=false){penColor=c;if(!custom){document.querySelectorAll('.cs').forEach(s=>s.classList.remove('active'));if(el)el.classList.add('active');}},
+    setGrid(v){gridMm=parseInt(v);drawGrid();},
+    setScale(v){pxMm=parseFloat(v);drawGrid();redraw();},
+    sel(id){selId=id;redraw();},
+    del(id){saveUndo();shapes=shapes.filter(s=>s.id!==id);if(selId===id)selId=null;redraw();},
+    undo(){if(!undoStack.length)return;shapes=JSON.parse(undoStack.pop());selId=null;redraw();toast('Undo ပြီးပါပြီ');},
+    clearAll(){if(!shapes.length)return;if(!confirm('Shape အားလုံးဖျက်မည်?'))return;saveUndo();shapes=[];selId=null;redraw();toast('ရှင်းပြီးပါပြီ');},
+    goTo(){const x=parseFloat(document.getElementById('inX').value)||0,y=parseFloat(document.getElementById('inY').value)||0,cp=toC(x,y);panX+=mc.width/2-cp.x;panY+=mc.height/2-cp.y;drawGrid();redraw();},
+    zoomIn(){zoom=Math.min(20,zoom*1.2);document.getElementById('zlbl').textContent=Math.round(zoom*100)+'%';drawGrid();redraw();},
+    zoomOut(){zoom=Math.max(.05,zoom/1.2);document.getElementById('zlbl').textContent=Math.round(zoom*100)+'%';drawGrid();redraw();},
+    zoomFit,loadShapes,getShapes,
+    preset(t){
+      saveUndo();
+      const m={c2ft:{type:'circle',center:{x:0,y:0},radius:304.8},c1ft:{type:'circle',center:{x:0,y:0},radius:152.4},r600:{type:'rect',p1:{x:-300,y:200},p2:{x:300,y:-200}},ls:{type:'polyline',pts:[{x:-200,y:150},{x:200,y:150},{x:200,y:-150},{x:40,y:-150},{x:40,y:-60},{x:-200,y:-60}],closed:true}};
+      const s={...m[t],id:++idCnt,color:'#00b4d8',width:2.5,style:'solid'};
+      commit(s);zoomFit();
+    },
+    exportDXF(){
+      const shapes=getShapes();
+      if(!shapes.length){toast('ပုံမရှိသေးပါ');return;}
+      let ents='';
+      shapes.forEach(s=>{
+        const lay=s.color==='#e24b4b'?'CENTER':s.color==='#f0a500'?'MARK':'CUT',col=lay==='CUT'?5:1;
+        if(s.type==='circle')ents+=`  0\nCIRCLE\n  8\n${lay}\n 62\n${col}\n 10\n${s.center.x.toFixed(4)}\n 20\n${s.center.y.toFixed(4)}\n 30\n0.0\n 40\n${s.radius.toFixed(4)}\n`;
+        else if(s.type==='line')ents+=`  0\nLINE\n  8\n${lay}\n 62\n${col}\n 10\n${s.p1.x.toFixed(4)}\n 20\n${s.p1.y.toFixed(4)}\n 30\n0.0\n 11\n${s.p2.x.toFixed(4)}\n 21\n${s.p2.y.toFixed(4)}\n 31\n0.0\n`;
+        else if(s.type==='rect'){const pts=[s.p1,{x:s.p2.x,y:s.p1.y},s.p2,{x:s.p1.x,y:s.p2.y}];let v='';pts.forEach(p=>{v+=` 10\n${p.x.toFixed(4)}\n 20\n${p.y.toFixed(4)}\n`;});ents+=`  0\nLWPOLYLINE\n  8\n${lay}\n 62\n${col}\n 70\n1\n 90\n4\n${v}`;}
+        else if(s.type==='polyline'||s.type==='freehand'){let v='';s.pts.forEach(p=>{v+=` 10\n${p.x.toFixed(4)}\n 20\n${p.y.toFixed(4)}\n`;});ents+=`  0\nLWPOLYLINE\n  8\n${lay}\n 62\n${col}\n 70\n${s.closed?1:0}\n 90\n${s.pts.length}\n${v}`;}
+        else if(s.type==='ellipse')ents+=`  0\nELLIPSE\n  8\n${lay}\n 62\n${col}\n 10\n${s.center.x.toFixed(4)}\n 20\n${s.center.y.toFixed(4)}\n 30\n0.0\n 11\n${s.rx.toFixed(4)}\n 21\n0.0\n 31\n0.0\n 40\n${(s.ry/s.rx).toFixed(4)}\n 41\n0.0\n 42\n6.28318\n`;
+      });
+      const dxf=`  0\nSECTION\n  2\nHEADER\n  9\n$INSUNITS\n 70\n4\n  0\nENDSEC\n  0\nSECTION\n  2\nENTITIES\n${ents}  0\nENDSEC\n  0\nEOF\n`;
+      const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([dxf],{type:'text/plain'}));a.download=`plasmacam_${Date.now()}.dxf`;a.click();
+      toast('DXF exported — '+shapes.length+' shapes');
+    },
+    exportSVG(){
+      const shapes=getShapes();if(!shapes.length){toast('ပုံမရှိသေးပါ');return;}
+      let bbs=[];shapes.forEach(s=>{const b=bbox(s);if(b)bbs.push(b);});
+      if(!bbs.length)return;
+      const xs=bbs.map(b=>b.x),xe=bbs.map(b=>b.x+b.w),ys=bbs.map(b=>b.y),ye=bbs.map(b=>b.y+b.h);
+      const mn={x:Math.min(...xs)-20,y:Math.min(...ys)-20},W=Math.max(...xe)-mn.x+20,H=Math.max(...ye)-mn.y+20;
+      const tx=x=>x-mn.x,ty=y=>H-(y-mn.y);let sv='';
+      shapes.forEach(s=>{
+        const dsh=s.style==='dash'?'stroke-dasharray="8 5"':s.style==='dot'?'stroke-dasharray="2 5"':'';
+        const st=`fill="none" stroke="${s.color||'#00b4d8'}" stroke-width="${s.width||1.5}" ${dsh}`;
+        if(s.type==='circle')sv+=`<circle cx="${tx(s.center.x)}" cy="${ty(s.center.y)}" r="${s.radius}" ${st}/>\n`;
+        else if(s.type==='line')sv+=`<line x1="${tx(s.p1.x)}" y1="${ty(s.p1.y)}" x2="${tx(s.p2.x)}" y2="${ty(s.p2.y)}" ${st}/>\n`;
+        else if(s.type==='rect'){const x=Math.min(s.p1.x,s.p2.x),y=Math.min(s.p1.y,s.p2.y),w=Math.abs(s.p2.x-s.p1.x),h=Math.abs(s.p2.y-s.p1.y);sv+=`<rect x="${tx(x)}" y="${ty(y+h)}" width="${w}" height="${h}" ${st}/>\n`;}
+        else if(s.type==='polyline'||s.type==='freehand'){const d=s.pts.map((p,i)=>`${i?'L':'M'}${tx(p.x)},${ty(p.y)}`).join(' ')+(s.closed?' Z':'');sv+=`<path d="${d}" ${st}/>\n`;}
+        else if(s.type==='ellipse')sv+=`<ellipse cx="${tx(s.center.x)}" cy="${ty(s.center.y)}" rx="${s.rx}" ry="${s.ry}" ${st}/>\n`;
+      });
+      const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([`<?xml version="1.0"?>\n<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}mm" height="${H}mm">\n<rect width="100%" height="100%" fill="#0d0f14"/>\n${sv}</svg>`],{type:'image/svg+xml'}));a.download=`plasmacam_${Date.now()}.svg`;a.click();
+      toast('SVG exported ပြီးပါပြီ');
+    }
+  };
+
+  function zoomFit(){
+    if(!shapes.length)return;
+    let mnx=Infinity,mxx=-Infinity,mny=Infinity,mxy=-Infinity;
+    shapes.forEach(s=>{const b=bbox(s);if(b){mnx=Math.min(mnx,b.x);mxx=Math.max(mxx,b.x+b.w);mny=Math.min(mny,b.y);mxy=Math.max(mxy,b.y+b.h);}});
+    const pw=mc.width-80,ph=mc.height-80,sw=mxx-mnx||1,sh=mxy-mny||1;
+    zoom=Math.min(pw/(sw*pxMm),ph/(sh*pxMm),10);
+    panX=mc.width/2-((mnx+mxx)/2)*pxMm*zoom;panY=mc.height/2+((mny+mxy)/2)*pxMm*zoom;
+    document.getElementById('zlbl').textContent=Math.round(zoom*100)+'%';drawGrid();redraw();
+  }
+})();
+
+// ════════════════════════════════════════════════
+//  AI SKETCH ENGINE  (namespace AI)
+// ════════════════════════════════════════════════
+const AI = (()=>{
+  const gc2=document.getElementById('gc2'),mc2=document.getElementById('mc2');
+  const gctx=gc2.getContext('2d'),ctx=mc2.getContext('2d');
+  const area=document.getElementById('aiCanvasArea');
+  let shapes=[],zoom=1,panX=0,panY=0,isPan=false,panStart=null,pxMm=2;
+
+  function resizeAI(){
+    const w=area.clientWidth,h=area.clientHeight;
+    [gc2,mc2].forEach(c=>{c.width=w;c.height=h;});
+    drawGrid2();redraw2();
+  }
+  function drawGrid2(){
+    gctx.clearRect(0,0,gc2.width,gc2.height);
+    const step=10*pxMm*zoom,ox=panX%step,oy=panY%step;
+    gctx.strokeStyle='rgba(0,180,216,.06)';gctx.lineWidth=.5;
+    for(let x=ox;x<gc2.width;x+=step){gctx.beginPath();gctx.moveTo(x,0);gctx.lineTo(x,gc2.height);gctx.stroke();}
+    for(let y=oy;y<gc2.height;y+=step){gctx.beginPath();gctx.moveTo(0,y);gctx.lineTo(gc2.width,y);gctx.stroke();}
+    gctx.strokeStyle='rgba(226,75,75,.2)';gctx.lineWidth=1;
+    gctx.beginPath();gctx.moveTo(panX,0);gctx.lineTo(panX,gc2.height);gctx.stroke();
+    gctx.beginPath();gctx.moveTo(0,panY);gctx.lineTo(gc2.width,panY);gctx.stroke();
+  }
+  function toC(x,y){return{x:x*pxMm*zoom+panX,y:-y*pxMm*zoom+panY};}
+  function toM(x,y){return{x:(x-panX)/(pxMm*zoom),y:-(y-panY)/(pxMm*zoom)};}
+
+  function drawShape2(s){
+    ctx.save();
+    ctx.strokeStyle=s.color||'#00b4d8';ctx.lineWidth=(s.width||2)*zoom;ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.setLineDash(s.dash||[]);
+    if(s.type==='circle'){const c=toC(s.cx||0,s.cy||0),r=(s.r||50)*pxMm*zoom;ctx.beginPath();ctx.arc(c.x,c.y,r,0,Math.PI*2);ctx.stroke();ctx.fillStyle=(s.color||'#00b4d8')+'12';ctx.fill();ctx.fillStyle=s.color||'#00b4d8';ctx.beginPath();ctx.arc(c.x,c.y,2.5,0,Math.PI*2);ctx.fill();}
+    else if(s.type==='rect'){const p1=toC(s.x||0,(s.y||0)+(s.h||0)),p2=toC((s.x||0)+(s.w||0),s.y||0);ctx.beginPath();ctx.rect(p1.x,p1.y,p2.x-p1.x,p2.y-p1.y);ctx.stroke();ctx.fillStyle=(s.color||'#00b4d8')+'10';ctx.fill();}
+    else if(s.type==='line'){const p1=toC(s.x1||0,s.y1||0),p2=toC(s.x2||0,s.y2||0);ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.stroke();}
+    else if(s.type==='polyline'&&s.pts&&s.pts.length>=2){const pp=s.pts.map(p=>toC(p.x,p.y));ctx.beginPath();ctx.moveTo(pp[0].x,pp[0].y);pp.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));if(s.closed)ctx.closePath();ctx.stroke();if(s.closed){ctx.fillStyle=(s.color||'#00b4d8')+'10';ctx.fill();}}
+    else if(s.type==='ellipse'){const c=toC(s.cx||0,s.cy||0),rx=(s.rx||50)*pxMm*zoom,ry=(s.ry||30)*pxMm*zoom;ctx.beginPath();ctx.ellipse(c.x,c.y,rx,ry,0,0,Math.PI*2);ctx.stroke();}
+    else if(s.type==='text'){const cp=toC(s.x||0,s.y||0);ctx.fillStyle=s.color||'#8b9dc3';ctx.setLineDash([]);ctx.font=`${(s.size||11)*zoom}px "Share Tech Mono"`;ctx.fillText(s.text||'',cp.x,cp.y);}
+    ctx.restore();
+  }
+
+  function redraw2(){
+    ctx.clearRect(0,0,mc2.width,mc2.height);
+    shapes.forEach(s=>drawShape2(s));
+    document.getElementById('aiScnt').textContent=shapes.length+' shapes';
+  }
+
+  mc2.addEventListener('mousemove',e=>{
+    if(isPan&&panStart){panX+=e.clientX-panStart.x;panY+=e.clientY-panStart.y;panStart={x:e.clientX,y:e.clientY};drawGrid2();redraw2();}
+    const r=mc2.getBoundingClientRect(),mm=toM(e.clientX-r.left,e.clientY-r.top);
+    document.getElementById('aiCoord').textContent=`X:${mm.x.toFixed(0)} Y:${mm.y.toFixed(0)}`;
+  });
+  mc2.addEventListener('mousedown',e=>{isPan=true;panStart={x:e.clientX,y:e.clientY};});
+  mc2.addEventListener('mouseup',()=>{isPan=false;panStart=null;});
+  mc2.addEventListener('wheel',e=>{
+    e.preventDefault();const f=e.deltaY<0?1.12:.89;
+    const r=mc2.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+    panX=mx-(mx-panX)*f;panY=my-(my-panY)*f;
+    zoom=Math.min(20,Math.max(.05,zoom*f));
+    document.getElementById('aiZlbl').textContent=Math.round(zoom*100)+'%';
+    drawGrid2();redraw2();
+  },{passive:false});
+
+  const dz=document.getElementById('dropZone');
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))loadFile(f);});
+
+  let b64=null;
+  function loadFile(f){
+    const r=new FileReader();
+    r.onload=ev=>{b64=ev.target.result.split(',')[1];document.getElementById('prevImg').src=ev.target.result;document.getElementById('prevWrap').style.display='block';document.getElementById('aiBtn').disabled=false;toast('ဓါတ်ပုံ load ပြီး — AI ပိုင်းခြားရန် နှိပ်ပါ');};
+    r.readAsDataURL(f);
+  }
+
+  function setStatus(type,html){const el=document.getElementById('statusBox');el.className='sb '+type;el.innerHTML=html;el.style.display='block';}
+  function setProg(v){document.getElementById('progFill').style.width=v+'%';}
+
+  async function analyze(){
+    if(!b64){toast('ဓါတ်ပုံ upload ဦးပါ');return;}
+    document.getElementById('aiBtn').disabled=true;
+    setStatus('loading','<span class="spin"></span> Claude AI ပိုင်းခြားနေသည်...');
+    setProg(20);
+    const prompt=`You are a CNC/CAD expert analyzing a hand-drawn sketch for plasma cutting.
+Analyze carefully and return ONLY valid JSON (no markdown, no explanation):
+{"description":"brief description","shapes":[{"id":1,"type":"circle","cx":0,"cy":0,"r":150,"label":"name","color":"#00b4d8"},{"id":2,"type":"rect","x":-100,"y":-75,"w":200,"h":150,"label":"name","color":"#00b4d8"},{"id":3,"type":"polyline","pts":[{"x":0,"y":0},{"x":100,"y":0},{"x":100,"y":80},{"x":0,"y":80}],"closed":true,"label":"name","color":"#00b4d8"},{"id":4,"type":"line","x1":-50,"y1":0,"x2":50,"y2":0,"label":"center","color":"#e24b4b","dash":[8,4]}],"notes":"","totalCutLength":1234.5}
+Rules: types=circle/rect/polyline/line/arc/ellipse/text. If dimensions written use them (mm). If not, estimate with largest ~500mm. Center at 0,0. Colors: #00b4d8=cut, #e24b4b=center, #f0a500=reference. Include holes as circles.`;
+    try{
+      setProg(40);
+      const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}},{type:'text',text:prompt}]}]})});
+      setProg(70);
+      if(!res.ok){const err=await res.json();throw new Error(err.error?.message||'API error');}
+      const data=await res.json();
+      const raw=data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+      setProg(90);
+      const jm=raw.match(/\{[\s\S]*\}/);if(!jm)throw new Error('JSON မတွေ့ပါ');
+      const parsed=JSON.parse(jm[0]);
+      applyResult(parsed);setProg(100);
+    }catch(err){
+      setProg(0);setStatus('error','❌ '+err.message);
+      document.getElementById('aiBtn').disabled=false;
+    }
+  }
+
+  function applyResult(data){
+    shapes=(data.shapes||[]);
+    // Show UI
+    setStatus('success','✓ Shapes '+shapes.length+' ခု တွေ့ရှိပါသည်');
+    const tc={};shapes.forEach(s=>tc[s.type]=(tc[s.type]||0)+1);
+    document.getElementById('chipWrap').innerHTML=Object.entries(tc).map(([t,n])=>`<div class="chip on">${t.toUpperCase()} ×${n}</div>`).join('');
+    document.getElementById('aiDescEl').textContent=(data.description||'')+(data.notes?'\n'+data.notes:'');
+    const dims=[];
+    if(data.totalCutLength)dims.push(['Cut length',data.totalCutLength.toFixed(1)+' mm']);
+    shapes.forEach(s=>{if(s.type==='circle')dims.push(['Ø'+(s.r*2).toFixed(1)+' mm',s.label||'circle']);if(s.type==='rect')dims.push([(s.w||0).toFixed(0)+'×'+(s.h||0).toFixed(0)+' mm',s.label||'rect']);});
+    document.getElementById('aiDimTable').innerHTML=dims.map(d=>`<tr><td class="dk">${d[0]}</td><td class="dv">${d[1]}</td></tr>`).join('');
+    document.getElementById('aiResultArea').style.display='block';
+    document.getElementById('aiDimsArea').style.display='block';
+    document.getElementById('aiExport').style.display='flex';
+    document.getElementById('aiEmptyHint').style.display='none';
+    document.getElementById('aiCI').style.display='flex';
+    drawGrid2();redraw2();zFit();
+    toast('AI drawing ပြီးပါပြီ — '+shapes.length+' shapes');
+
+    // Also push to main drawing engine
+    const converted=shapes.map((s,i)=>{
+      const base={id:10000+i,color:s.color||'#00b4d8',width:2,style:'solid'};
+      if(s.type==='circle')return{...base,type:'circle',center:{x:s.cx||0,y:s.cy||0},radius:s.r||50};
+      if(s.type==='rect')return{...base,type:'rect',p1:{x:s.x||0,y:s.y||0},p2:{x:(s.x||0)+(s.w||0),y:(s.y||0)+(s.h||0)}};
+      if(s.type==='polyline'&&s.pts)return{...base,type:'polyline',pts:s.pts,closed:!!s.closed};
+      if(s.type==='line')return{...base,type:'line',p1:{x:s.x1||0,y:s.y1||0},p2:{x:s.x2||0,y:s.y2||0}};
+      if(s.type==='ellipse')return{...base,type:'ellipse',center:{x:s.cx||0,y:s.cy||0},rx:s.rx||50,ry:s.ry||30};
+      return null;
+    }).filter(Boolean);
+    A.loadShapes(converted);
+  }
+
+  function zFit(){
+    if(!shapes.length)return;
+    const allPts=[];
+    shapes.forEach(s=>{
+      if(s.type==='circle'){allPts.push({x:(s.cx||0)-s.r,y:(s.cy||0)-s.r},{x:(s.cx||0)+s.r,y:(s.cy||0)+s.r});}
+      else if(s.type==='rect'){allPts.push({x:s.x||0,y:s.y||0},{x:(s.x||0)+(s.w||0),y:(s.y||0)+(s.h||0)});}
+      else if(s.type==='polyline'&&s.pts)s.pts.forEach(p=>allPts.push(p));
+      else if(s.type==='line'){allPts.push({x:s.x1||0,y:s.y1||0},{x:s.x2||0,y:s.y2||0});}
+    });
+    if(!allPts.length)return;
+    const xs=allPts.map(p=>p.x),ys=allPts.map(p=>p.y);
+    const mnx=Math.min(...xs),mxx=Math.max(...xs),mny=Math.min(...ys),mxy=Math.max(...ys);
+    const pw=mc2.width-80,ph=mc2.height-80;
+    zoom=Math.min(pw/((mxx-mnx||1)*pxMm),ph/((mxy-mny||1)*pxMm),10);
+    panX=mc2.width/2-((mnx+mxx)/2)*pxMm*zoom;panY=mc2.height/2+((mny+mxy)/2)*pxMm*zoom;
+    document.getElementById('aiZlbl').textContent=Math.round(zoom*100)+'%';
+    drawGrid2();redraw2();
+  }
+
+  return{
+    handleFile(e){const f=e.target.files[0];if(f)loadFile(f);},
+    analyze,
+    syncCanvas(){resizeAI();},
+    zIn(){zoom=Math.min(20,zoom*1.2);document.getElementById('aiZlbl').textContent=Math.round(zoom*100)+'%';drawGrid2();redraw2();},
+    zOut(){zoom=Math.max(.05,zoom/1.2);document.getElementById('aiZlbl').textContent=Math.round(zoom*100)+'%';drawGrid2();redraw2();},
+    zFit,
+    reset(){
+      shapes=[];b64=null;
+      document.getElementById('prevWrap').style.display='none';
+      document.getElementById('prevImg').src='';
+      document.getElementById('aiBtn').disabled=true;
+      document.getElementById('statusBox').style.display='none';
+      document.getElementById('aiResultArea').style.display='none';
+      document.getElementById('aiDimsArea').style.display='none';
+      document.getElementById('aiExport').style.display='none';
+      document.getElementById('aiEmptyHint').style.display='block';
+      document.getElementById('aiCI').style.display='none';
+      document.getElementById('fileInput').value='';
+      setProg(0);ctx.clearRect(0,0,mc2.width,mc2.height);
+    }
+  };
+})();
+
+// ════════════════════════════════════════════════
+//  COST CALCULATOR  (namespace C)
+// ════════════════════════════════════════════════
+const C = {
+  calc(){
+    const mat=parseFloat(document.getElementById('c-mat').value);
+    const thick=parseFloat(document.getElementById('c-thick').value);
+    const w=parseFloat(document.getElementById('c-w').value)||0;
+    const h=parseFloat(document.getElementById('c-h').value)||0;
+    const qty=parseFloat(document.getElementById('c-qty').value)||1;
+    const kgP=parseFloat(document.getElementById('c-price').value)||2500;
+    const gas=parseFloat(document.getElementById('c-gas').value)||15000;
+    const setup=parseFloat(document.getElementById('c-setup').value)||5000;
+    const margin=parseFloat(document.getElementById('c-margin').value)||20;
+    const shape=document.getElementById('c-shape').value;
+    const density=7.85;
+    const areaCm2=shape==='circle'?Math.PI*(w/2)**2/100:w*h/100;
+    const peri=shape==='circle'?Math.PI*w:2*(w+h);
+    const vol=areaCm2*(thick/10),wKg=vol*density*mat/1000;
+    const matC=wKg*kgP*qty;
+    const speeds={3:4000,6:2800,8:2200,10:1800,12:1400,16:1000,20:700};
+    const spd=speeds[thick]||2000,cutMin=peri/spd;
+    const cutC=(cutMin/60)*gas*qty;
+    const sub=matC+cutC+setup,total=sub*(1+margin/100);
+    document.getElementById('grandTotal').textContent=Math.round(total).toLocaleString()+' Ks';
+    document.getElementById('costBreakdown').innerHTML=
+      `<div class="bdr"><span>သံပြားကုန်ကျ (${wKg.toFixed(2)}kg×${qty})</span><span>${Math.round(matC).toLocaleString()} Ks</span></div>`+
+      `<div class="bdr"><span>Plasma ဖြတ် (${(cutMin*60).toFixed(0)}sec)</span><span>${Math.round(cutC).toLocaleString()} Ks</span></div>`+
+      `<div class="bdr"><span>Setup</span><span>${setup.toLocaleString()} Ks</span></div>`+
+      `<div class="bdr"><span>Margin ${margin}%</span><span>${Math.round(sub*margin/100).toLocaleString()} Ks</span></div>`+
+      `<div class="bdr"><span>TOTAL ×${qty}</span><span>${Math.round(total).toLocaleString()} Ks</span></div>`;
+    document.getElementById('costSpec').innerHTML=
+      `<tr><td class="dk">Shape</td><td class="dv">${shape==='circle'?'Circle':'Rectangle'}</td></tr>`+
+      `<tr><td class="dk">Size</td><td class="dv">${shape==='circle'?'Ø'+w:''+w+'×'+h}mm</td></tr>`+
+      `<tr><td class="dk">Thickness</td><td class="dv">${thick}mm</td></tr>`+
+      `<tr><td class="dk">Weight</td><td class="dv">${wKg.toFixed(2)} kg</td></tr>`+
+      `<tr><td class="dk">Cut speed</td><td class="dv">${spd} mm/min</td></tr>`+
+      `<tr><td class="dk">Cut length</td><td class="dv">${peri.toFixed(0)} mm</td></tr>`;
+  },
+  toOrder(){
+    const shape=document.getElementById('c-shape').value;
+    const w=document.getElementById('c-w').value,h=document.getElementById('c-h').value;
+    const total=parseInt(document.getElementById('grandTotal').textContent.replace(/[^0-9]/g,''));
+    document.getElementById('m-shape').value=shape==='circle'?'Circle':'Rectangle';
+    document.getElementById('m-dim').value=shape==='circle'?`Ø${w}mm`:`${w}×${h}mm`;
+    document.getElementById('m-thick').value=document.getElementById('c-thick').value;
+    document.getElementById('m-qty').value=document.getElementById('c-qty').value;
+    document.getElementById('m-total').value=total;
+    switchMainTab('orders');O.openModal();
+  }
+};
+
+// ════════════════════════════════════════════════
+//  ORDER MANAGEMENT  (namespace O)
+// ════════════════════════════════════════════════
+const O = (()=>{
+  let orders=[
+    {id:'ORD-001',name:'ဦးကျော်ဇင်',phone:'09-777123456',shape:'Circle',dim:'Ø609.6mm',mat:'Mild Steel',thick:6,qty:2,total:85000,status:'done',note:''},
+    {id:'ORD-002',name:'မအေးသူဇာ',phone:'09-888234567',shape:'Rectangle',dim:'500×300mm',mat:'Stainless Steel',thick:3,qty:5,total:240000,status:'cutting',note:'Edge smooth လုပ်ပေးပါ'},
+    {id:'ORD-003',name:'ဦးမင်းသိန်း',phone:'09-999345678',shape:'L-Shape',dim:'400×200mm',mat:'Mild Steel',thick:8,qty:10,total:180000,status:'pending',note:''},
+  ];
+  let editId=null,cnt=4;
+  const statMap={pending:{cls:'bp',label:'PENDING'},cutting:{cls:'bc',label:'CUTTING'},done:{cls:'bd',label:'DONE'},cancelled:{cls:'bx',label:'CANCEL'}};
+
+  return{
+    render(){
+      const total=orders.length,pend=orders.filter(o=>o.status==='pending').length,cut=orders.filter(o=>o.status==='cutting').length,done=orders.filter(o=>o.status==='done').length;
+      const rev=orders.filter(o=>o.status==='done').reduce((a,o)=>a+o.total,0);
+      document.getElementById('orderSubtitle').textContent='Order '+total+' ခု';
+      document.getElementById('statsBar').innerHTML=
+        `<div class="sc"><div class="sl2">TOTAL ORDERS</div><div class="sv">${total}</div></div>`+
+        `<div class="sc"><div class="sl2">PENDING</div><div class="sv h">${pend}</div></div>`+
+        `<div class="sc"><div class="sl2">CUTTING</div><div class="sv p">${cut}</div></div>`+
+        `<div class="sc"><div class="sl2">REVENUE</div><div class="sv g">${rev.toLocaleString()} Ks</div></div>`;
+      document.getElementById('ordersBody').innerHTML=orders.map(o=>{
+        const s=statMap[o.status]||statMap.pending;
+        return`<tr>
+          <td style="font-family:var(--mono);color:var(--plasma);font-size:11px">${o.id}</td>
+          <td><div style="font-weight:500">${o.name}</div><div style="font-size:10px;color:var(--muted);font-family:var(--mono)">${o.phone}</div></td>
+          <td><div>${o.shape}</div><div style="font-size:10px;color:var(--plasma);font-family:var(--mono)">${o.dim}</div></td>
+          <td><div>${o.mat}</div><div style="font-size:10px;color:var(--muted);font-family:var(--mono)">${o.thick}mm</div></td>
+          <td style="font-family:var(--mono);text-align:center">${o.qty}</td>
+          <td style="font-family:var(--mono);color:var(--success)">${o.total.toLocaleString()}</td>
+          <td><span class="badge ${s.cls}">${s.label}</span></td>
+          <td><div style="display:flex;gap:5px;align-items:center">
+            <button class="btn btn-g btn-sm" onclick="O.edit('${o.id}')">✏</button>
+            <select class="btn btn-g btn-sm" style="padding:3px 6px;font-size:9px" onchange="O.chStatus('${o.id}',this.value)"><option value="">Status</option><option value="pending">Pending</option><option value="cutting">Cutting</option><option value="done">Done</option><option value="cancelled">Cancel</option></select>
+            <button class="btn btn-d btn-sm" onclick="O.del('${o.id}')">🗑</button>
+          </div></td>
+        </tr>`;
+      }).join('');
+    },
+    openModal(){document.getElementById('modal').classList.add('open');},
+    close(){document.getElementById('modal').classList.remove('open');editId=null;document.getElementById('modalTitle').textContent='Order အသစ်';},
+    save(){
+      const name=document.getElementById('m-name').value.trim();
+      if(!name){toast('Customer အမည်ထည့်ပါ');return;}
+      const d={name,phone:document.getElementById('m-phone').value,shape:document.getElementById('m-shape').value,dim:document.getElementById('m-dim').value,mat:document.getElementById('m-mat').value,thick:parseFloat(document.getElementById('m-thick').value),qty:parseInt(document.getElementById('m-qty').value)||1,total:parseInt(document.getElementById('m-total').value)||0,status:document.getElementById('m-status').value,note:document.getElementById('m-note').value};
+      if(editId){const i=orders.findIndex(o=>o.id===editId);orders[i]={...orders[i],...d};toast('Order ပြင်ပြီးပါပြီ');}
+      else{d.id='ORD-'+String(cnt++).padStart(3,'0');orders.unshift(d);toast('Order ထည့်ပြီးပါပြီ');}
+      this.close();this.render();
+    },
+    edit(id){
+      editId=id;const o=orders.find(x=>x.id===id);if(!o)return;
+      document.getElementById('modalTitle').textContent='Order ပြင်ဆင် — '+id;
+      ['name','phone','dim','note'].forEach(k=>document.getElementById('m-'+k).value=o[k]||'');
+      document.getElementById('m-shape').value=o.shape;document.getElementById('m-mat').value=o.mat;
+      document.getElementById('m-thick').value=o.thick;document.getElementById('m-qty').value=o.qty;
+      document.getElementById('m-total').value=o.total;document.getElementById('m-status').value=o.status;
+      this.openModal();
+    },
+    del(id){if(!confirm('Order ဖျက်မည်?'))return;orders=orders.filter(o=>o.id!==id);this.render();toast('Order ဖျက်ပြီးပါပြီ');},
+    chStatus(id,s){if(!s)return;const o=orders.find(x=>x.id===id);if(o){o.status=s;this.render();toast('Status ပြောင်းပြီးပါပြီ');}},
+  };
+})();
+
+// Init
+C.calc();
+O.render();
+</script>
+
+
+</body></html>
